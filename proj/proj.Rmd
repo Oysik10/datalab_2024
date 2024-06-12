@@ -6,6 +6,37 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+library(tidyverse)
+library(sf)
+library(tmap)
+library(rnaturalearth)
+library(rnaturalearthhires)
+library(rnaturalearthdata)
+setwd('/Users/oysik10/Desktop/oysik_datalab/datalab_2024/proj')
+sewanee_weather<-read_csv('sewanee_weather.csv')
 ```
 
+# Introduction
+
+Here are what we will be covering: 
+
+- Minimum and Maximum Temperature over time. 
+- What month has the most snowfall on average?
+- Effect of temperature in precipitation.
+
+## Effect of Temperature in Precipitation
+
+```{r}
+
+sewanee_weather<-sewanee_weather %>% 
+  mutate(avg_t=(TMAX+TMIN)/2) %>% 
+  mutate(year=year(DATE))
+
+ggplot(data=sewanee_weather %>%  filter(year>=2010 & year<=2020), aes(x=avg_t, y= PRCP))+
+  geom_line(aes(color=year))+
+  labs(title='Relation between Temperature and Precipitation from 2010 to 2020',
+       color='YEAR',
+       x='AVG TEMPERATURE',
+       y='PRECIPITATION')
+```
