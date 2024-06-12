@@ -41,3 +41,36 @@ ggplot(data=sewanee_weather %>%  filter(year>=2010 & year<=2020), aes(x=avg_t, y
        y='PRECIPITATION')+
     theme_minimal()
 ```
+## Effect of Temperature in Precipitation
+```{r}
+
+sewanee_weather<-sewanee_weather %>% 
+  mutate(avg_t=(TMAX+TMIN)/2) %>% 
+  mutate(year = year(DATE))
+
+ggplot(data=sewanee_weather %>%  filter(year>=2010 & year<=2020), aes(x=avg_t, y= PRCP))+
+  geom_line(aes(color = year))
+  labs(title='Relation between Temperature and Precipitation from 2010 to 2020',
+       color='YEAR',
+       x='AVG TEMPERATURE',
+       y='PRECIPITATION')+
+    theme_minimal()
+```
+
+## Average Precipitation for each month over five year periods
+
+```{r}
+updated<- sewanee_weather %>%
+  filter(year>=2000 & year<=2025) %>% 
+  mutate(year = year(DATE),
+         month = month(DATE)) %>%
+  mutate(period = cut(year, breaks = seq(2000, 2025, by = 5))) %>%
+  group_by(period, month) %>%
+  summarize(mean_prcp = mean(PRCP, na.rm = TRUE))
+
+updated<-na.omit(updated)
+  
+ggplot(data=updated, aes(x=month, y=mean_prcp, col=month))+
+  geom_line()+
+  facet_wrap(~period)
+```
