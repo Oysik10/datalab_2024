@@ -1,0 +1,11 @@
+---
+title: "proj"
+author: "oysik saif"
+date: "2024-06-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+

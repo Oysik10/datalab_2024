@@ -7,6 +7,15 @@ library(ggplot2)
 library(dplyr)
 library(tidyverse)
 
+bb_names %>% 
+  filter(name=='Ram') %>% 
+  group_by(prop) %>% 
+  tally 
+
+ggplot(bb_names %>% filter(name=='Linda'), aes(x=year, y= prop, color=sex))+
+  geom_line()
+  
+
 ggplot(data=bb_names %>% filter(name=='Marie') %>% filter(year>1982), aes(x=year))+
          geom_density()
 
@@ -23,6 +32,7 @@ top_5<-bb_names %>%
 
 ggplot(data=top_5, aes(x=name, y=prop))+
   geom_col(color='Blue', fill='Blue', alpha=.5)
+
 
 the_nineties<-bb_names %>% 
   filter(1990<=year) %>% 
