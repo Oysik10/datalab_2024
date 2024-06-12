@@ -1,6 +1,6 @@
 ---
 title: "proj"
-author: "oysik saif"
+author: "oysik, kayla, gavin, mason"
 date: "2024-06-12"
 output: html_document
 ---
@@ -34,14 +34,17 @@ sewanee_weather<-sewanee_weather %>%
   mutate(year = as.integer(format(DATE, "%Y")))
 
 ggplot(data=sewanee_weather %>%  filter(year>=2010 & year<=2020), aes(x=avg_t, y= PRCP))+
-  geom_line(aes(color = factor(year)))
+  geom_line(aes(color = factor(year)))+
   labs(title='Relation between Temperature and Precipitation from 2010 to 2020',
        color='YEAR',
        x='AVG TEMPERATURE',
-       y='PRECIPITATION')+
+       y='PRECIPITATION', 
+       caption='The distribution is a bell curve with a left skew, which tells us that there is a higher concentration of rain when the temperatures are around 60 degrees.')+
     theme_minimal()
 ```
+
 ## Effect of Temperature in Precipitation
+
 ```{r}
 
 sewanee_weather<-sewanee_weather %>% 
@@ -53,13 +56,16 @@ ggplot(data=sewanee_weather %>%  filter(year>=2010 & year<=2020), aes(x=avg_t, y
   labs(title='Relation between Temperature and Precipitation from 2010 to 2020',
        color='YEAR',
        x='AVG TEMPERATURE',
-       y='PRECIPITATION')+
+       y='PRECIPITATION',
+       caption = 'The distribution is a bell curve with a left skew, which tells us that there is a higher concentration of rain when the temperatures are around 60 degrees.')+
     theme_minimal()
 ```
 
+
 ## Average Precipitation for each month over five year periods
 
-```{r}
+
+```{r echo=FALSE, message=FALSE}
 updated<- sewanee_weather %>%
   filter(year>=2000 & year<=2025) %>% 
   mutate(year = year(DATE),
@@ -72,5 +78,46 @@ updated<-na.omit(updated)
   
 ggplot(data=updated, aes(x=month, y=mean_prcp, col=month))+
   geom_line()+
-  facet_wrap(~period)
+  facet_wrap(~period)+
+  labs(
+    x='Months',
+    y='Avg. Precipitation',
+    caption = 'Over the five year periods, there tends to be a higher concentration of rain in the colder months (very late and very early year), but not yet to any degree of significance.'
+  )
+```
+
+## Average Temperature over the years
+
+```{r echo=FALSE, message=FALSE}
+sewanee<-read_csv('sewanee_weather.csv')
+sewanee <- sewanee %>%
+  mutate(year = year(DATE))
+#pull average temperature of all time
+avg_temp<-sewanee %>%
+  summarise(avg_temp = mean(((TMIN + TMAX)/2), na.rm = TRUE))
+#pull average temperatures by year
+avg_temp_by_year <- sewanee %>%
+  group_by(year) %>%
+  summarise(avg_temp_by_year = mean(((TMIN + TMAX)/2), na.rm = TRUE)) %>%
+  mutate(avg_temp_by_year)
+#line graph for average temperature by year!
+ggplot(data = avg_temp_by_year, aes(x = year, y = avg_temp_by_year)) +
+  geom_point(alpha = 0.2) +
+  geom_line() +
+  labs(x = 'Time (Year)',
+       y = 'Average Temperature',
+       title = 'Average Temperature Over Time',
+       caption = 'Scaled from 50-62 degrees. Of note is that 2024 data is only from January to the beginning of April, so temperatures will be much lower on average so far.')
+twenty_twenty_four <- sewanee %>%
+  filter(year == 2024)
+#only data from january-beginning of april 2024, so temps will be much lower on avg so far!
+#scale from 0-65 degrees
+ggplot(data = avg_temp_by_year, aes(x = year, y = avg_temp_by_year)) +
+  geom_point(alpha = 0.2) +
+  geom_line() +
+  coord_cartesian(ylim = c(0, 65)) +
+  labs(x = 'Time (Year)',
+       y = 'Average Temperature',
+       title = 'Average Temperature Over Time',
+       caption = 'Scaled from 0-65 degrees. Of note is that 2024 data is only from January to the beginning of April, so temperatures will be much lower on average so far.')
 ```
