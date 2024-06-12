@@ -7,10 +7,6 @@ library(ggplot2)
 library(dplyr)
 library(tidyverse)
 
-bb_names %>% 
-  filter(name=='Ram') %>% 
-  group_by(prop) %>% 
-  tally 
 
 ggplot(bb_names %>% filter(name=='Linda'), aes(x=year, y= prop, color=sex))+
   geom_line()
