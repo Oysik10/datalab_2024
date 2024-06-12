@@ -31,12 +31,13 @@ Here are what we will be covering:
 
 sewanee_weather<-sewanee_weather %>% 
   mutate(avg_t=(TMAX+TMIN)/2) %>% 
-  mutate(year=year(DATE))
+  mutate(year = as.integer(format(DATE, "%Y")))
 
 ggplot(data=sewanee_weather %>%  filter(year>=2010 & year<=2020), aes(x=avg_t, y= PRCP))+
-  geom_line(aes(color=year))+
+  geom_line(aes(color = factor(year)))
   labs(title='Relation between Temperature and Precipitation from 2010 to 2020',
        color='YEAR',
        x='AVG TEMPERATURE',
-       y='PRECIPITATION')
+       y='PRECIPITATION')+
+    theme_minimal()
 ```
